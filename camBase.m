@@ -1,4 +1,4 @@
-%% Test "program" for the Genie Nano C1920 GigE camera
+%% Recording program for the Genie Nano C1920 GigE camera
 %
 global message cam;
 
@@ -39,17 +39,19 @@ shouldMarkTrialEnd = true;
 saveRawFrameData = false;  % Don't use this ... it's *very* slow and incomplete
 
 
-%% create local messenger (if needed)
-rhost = 'localhost';
-localPort = 4013;
-remotePort = 4012;
-
-message = 'null';
-if(~exist('msg', 'var'))
-    msg = udp(rhost, remotePort, 'LocalPort', localPort);
+%% create local messenger
+masterIP='172.30.11.XXX';
+port=instrfindall('RemoteHost',masterIP); 
+if ~isempty(port) 
+    fclose(port); 
+    delete(port);
+    clear port;
 end
-fclose(msg);
+
+msg = udp(masterIP,'RemotePort',9000,'LocalPort',8000);
 msg.BytesAvailableFcnMode = 'terminator';
+msg.Terminator = '~'; 
+
 
 % the callback function sets message content and, for speed, will stop(cam) if message
 % == stop
