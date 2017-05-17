@@ -24,6 +24,10 @@ set(cam, 'TriggerFcn', @camTriggerOccurred);
 % make sure Jumbo Frames are set to 9k in the GigE NIC adapter settings
 src.PacketSize = 9000;
 
+%set brightness
+src.autoBrightnessTarget=255;
+
+
 TimeoutDur = 300;  % seconds to wait for the hardware trigger timeout in wait()
 Fps = 15;  % Hz
 
@@ -37,10 +41,10 @@ sleepDur = 0.1;
 state = 1;
 shouldMarkTrialEnd = true;
 saveRawFrameData = false;  % Don't use this ... it's *very* slow and incomplete
+message='';
 
-
-%% create local messenger
-masterIP='172.30.11.XXX';
+%% create udp connection to PLDAPS machine
+masterIP='172.30.11.122';
 port=instrfindall('RemoteHost',masterIP); 
 if ~isempty(port) 
     fclose(port); 
@@ -49,15 +53,28 @@ if ~isempty(port)
 end
 
 msg = udp(masterIP,'RemotePort',9000,'LocalPort',8000);
-msg.BytesAvailableFcnMode = 'terminator';
+
+set(msg, 'InputBufferSize', 1024)
+set(msg, 'OutputBufferSize', 1024)
+set(msg, 'Datagramterminatemode', 'off')
+msg.BytesAvailableFcnMode = 'Terminator';
 msg.Terminator = '~'; 
 
+    
+fopen(msg);
+stat=get(msg, 'Status');
+
+if ~strcmp(stat, 'open')
+    disp([' Trouble opening connection to PLDAPS computer; cannot proceed']);
+    msg=[];
+    return;
+end
 
 % the callback function sets message content and, for speed, will stop(cam) if message
 % == stop
+%msg.bytesavailablefcn = @camUdpBytesAvailable;
 msg.DatagramReceivedFcn = @camUdpBytesAvailable;
 msg.ReadAsyncMode = 'continuous';
-fopen(msg);
 
 
 %%  The main loop
