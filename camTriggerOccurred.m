@@ -1,5 +1,5 @@
 % Callback function to print trigger message
 %
 function camTriggerOccurred(src, event)
-    fprintf('\tTrigger detected, start acquisition ...\n');
+    disp('Trigger detected, start acquisition');
 end

@@ -1,4 +1,6 @@
-function camPreview(cam)
+function camPreview
+
+global cam;
 
 fprintf('Generating preview\n');
 
