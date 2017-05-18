@@ -12,8 +12,9 @@ try
         return
     end
     
-    inString = inString(1:end-1)  %Get rid of the terminator
+    inString = inString(1:end-1);  %Get rid of the terminator
     msg=strsplit(inString,';');
+    disp(['received: ' msg{1}])
     
     switch msg{1}
         

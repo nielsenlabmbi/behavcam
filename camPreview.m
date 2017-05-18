@@ -9,9 +9,9 @@ set(src, 'TriggerMode', 'Off');
 triggerconfig(cam,'immediate','none','none');
 if(~exist('fig', 'var'))
     % hardcoded position and size!  Could use AspectRatio etc
-    fig = figure('Name', 'GigE Preview : Active', 'MenuBar', 'none', 'Position', [100 500 888 500]);
+    fig = figure('Name', 'GigE Preview', 'MenuBar', 'none', 'Position', [100 500 888 500]);
 else
-    set(fig, 'Name', 'GigE Preview : Active');
+    set(fig, 'Name', 'GigE Preview');
 end
 vidRes = cam.VideoResolution;
 nBands = cam.NumberOfBands;

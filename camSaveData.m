@@ -16,3 +16,5 @@ writeVideo(fileInfo.writerObj, dt2);
 meta{trialCounter}.prop = size(dt2);
 
 disp(['Trial ' num2str(trialCounter) ' saved']);
+
+trialCounter=trialCounter+1;
